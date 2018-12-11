@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+   <meta charset="UTF-8">
+   <meta content="width=device-width, initial-scale=1" name="viewport">
+
+   <title>Text Editor</title>
+
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+   <link rel="stylesheet" href="noteCSS.css">
+
+</head>
+<body>
+   
+   <!-- Heading text -->
+   <div id="heading" contenteditable="true" data-placeholder="Write Pad" class="dpholder"></div>
+   
+   <!-- Body text -->
+   <div id="content" contenteditable="true" data-placeholder="Double tap on save button to move it to the top :)" class="dpholder"></div>
+   
+   <!-- The separate button -->
+   <div id="seprBtn" onclick="btnSepr()" ondblclick="btnSepr()" style="display: none; position: absolute; top: 0; right: 0;" class="fancy-button bg-gradient"><span><i class="fa fa-refresh"></i></span></div>
+   
+   <!-- The fancy button -->
+   <div id="fancyBtn" onclick="saveasFile()" ondblclick="btnFancy()" style="position: fixed; bottom: 0; right: 0;" class="fancy-button bg-gradient"><span><b>Save</b></span></div>
+   
+   <script>
+      
+      // Setting up the button's visibility function
+      
+      function btnFancy() {
+         document.getElementById("fancyBtn").style.display = "none";
+         document.getElementById("seprBtn").style.display = "block"; }
+      
+      function btnSepr() {
+         document.getElementById("seprBtn").style.display = "none";
+         document.getElementById("fancyBtn").style.display = "block"; }
+
+   </script><script>
+
+      // Setting the names
+
+      document.getElementById("heading").innerHTML =
+      localStorage["title"] || "";
+      document.getElementById("content").innerHTML =
+      localStorage["text"] || "";
+      
+      setInterval(function() {
+         
+         // Fuction that is saving the innerHTML of the div
+         
+         localStorage["title"] = document.getElementById("heading").innerHTML; // heading div
+         localStorage["text"] = document.getElementById("content").innerHTML; // content div
+      }, 1000);
+      
+   </script><script>
+      
+      // functions for saving the contents of the div into  a file
+      
+      function saveasFile() {
+         
+         var textToSave = document.getElementById("content").value;
+         var textToSaveAsBlob = new Blob([textToSave], {type:"text/plain"});
+         var textToSaveAsURL = window.URL.createObjectURL(textToSaveAsBlob);
+         var fileNameToSaveAs = document.getElementById("heading").value;
+         
+         var downloadLink = document.createElement("a");
+         downloadLink.download = fileNameToSaveAs;
+         downloadLink.innerHTML = "Download File";
+         downloadLink.href = textToSaveAsURL;
+         downloadLink.onclick = destroyClickedElement;
+         downloadLink.style.display = "none";
+         document.body.appendChild(downloadLink);
+         
+         downloadLink.click(); }
+      
+      function destroyClickedElement(event) {
+         document.body.removeChild(event.target); }
+
+   </script>
+</body>
+</html>
