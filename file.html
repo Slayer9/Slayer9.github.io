@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+   
+   <meta charset="UTF-8">
+   <meta content="width=device-width, initial-scale=1" name="viewport">
+   
+   <title>ate</title>
+   
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+   <link rel="stylesheet" href="file.css">
+   
+</head>
+<body>
+   
+   <!-- The separate button -->
+   <div id="seprBtn" onclick="btnSepr()" style="display: none; position: absolute; top: 0; right: 0;" class="fancy-button bg-gradient"><span><i class="fa fa-refresh"></i></span></div>
+   
+   <!-- The fancy button -->
+   <div id="fancyBtn" onclick="gFile()" onmousedown="btnFancy()" style="position: fixed; bottom: 0; right: 0;" class="fancy-button bg-gradient"><span><b class="noselect">Save</b></span></div>
+   
+   <script>
+      
+      // Setting up the button's visibility function
+      
+      function btnFancy() {
+         document.getElementById("fancyBtn").style.display = "none";
+         document.getElementById("seprBtn").style.display = "block"; }
+      
+      function btnSepr() {
+         document.getElementById("seprBtn").style.display = "none";
+         document.getElementById("fancyBtn").style.display = "block"; }
+      
+   </script><script>
+      
+      // functions for saving the contents of the div into  a file
+      
+      function gFile() {
+         alert("Click function"); }
+   </script>
+</body>
+</html>
