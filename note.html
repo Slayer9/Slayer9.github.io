@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+   
+   <meta charset="UTF-8">
+   <meta content="width=device-width, initial-scale=1" name="viewport">
+   
+   <title>Write Pad</title>
+   
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+   <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+   <link rel="stylesheet" href="note.css">
+   
+</head>
+<body>
+   
+   <!-- Heading text -->
+   <div id="heading" contenteditable="true" data-placeholder="Write Pad" class="dpholder"></div>
+   
+   <!-- Body text -->
+   <div id="content" contenteditable="true" data-placeholder="Double tap on save button to move it to the top :)" class="dpholder"></div>
+   
+   <!-- The separate button -->
+   <div id="seprBtn" onclick="btnShift()" style="display: none; position: absolute; top: 0; right: 0;" class="fancy-button bg-gradient-Green"><span><i class="fa fa-refresh"></i></span></div>
+   
+   <!-- The fancy button -->
+   <div onclick="btnMenu()" id="fancyBtn" style="position: fixed; bottom: 0; right: 0; font-size: 17px" class="fancy-button bg-gradient-Green"><span><i class="noselect fa fa-gear"></i></span></div>
+
+   <!-- The div containing all the option buttons -->
+   <div id="divMenu" class="dropdown-content" style="display: none;">
+   
+      <!-- The button that loads the file -->
+      <div id="fancyBtn" onclick="document.getElementById('fileToLoad').click();" style="position: fixed; bottom: 140px; right: 0;" class="fancy-button bg-gradient-Red"><span><i class="noselect fa fa-upload"></i></span></div>
+   
+      <!-- The button that shifts position -->
+      <div id="fancyBtn" onclick="btnShift()" style="position: fixed; bottom: 0; right: 70px;" class="fancy-button bg-gradient-Purple"><span><i class="noselect fa fa-refresh"></i></span></div>
+   
+      <!-- The button that downloads the written text -->
+      <div id="fancyBtn" onclick="saveFile()" style="position: fixed; bottom: 70px; right: 0;" class="fancy-button bg-gradient-Blue"><span><i class="noselect fa fa-download"></i></span></div>
+      
+      <!-- The hidden input field -->
+      <input id="fileToLoad" onchange="loadFile();" style="display: block;" type="file">
+      
+   </div><script>
+      
+      // Setting up the buttons' visibility and shifting function
+      
+      function btnShift() {
+         var butOn = document.getElementById("fancyBtn").style.display
+         var divOn = document.getElementById("divMenu").style.display
+
+         if (divOn == "block") {
+            document.getElementById("divMenu").style.display = "none"; }
+
+         if (butOn == "none") {
+            document.getElementById("fancyBtn").style.display = "block";;
+            document.getElementById("seprBtn").style.display = "none";
+         } else {
+            document.getElementById("fancyBtn").style.display = "none";
+            document.getElementById("seprBtn").style.display = "block"; } }
+
+
+      function btnMenu() {
+         var option = document.getElementById("divMenu").style.display
+
+         if (option == "none") {
+            document.getElementById("divMenu").style.display = "block";
+         } else {
+            document.getElementById("divMenu").style.display = "none"; } }
+
+   </script><script>
+      
+      // Setting the names
+      
+      document.getElementById("heading").innerHTML = localStorage["title"] || '';
+      document.getElementById("content").innerHTML = localStorage["text"] || '';
+      
+      setInterval(function() {
+         
+         // Fuction that is saving the innerHTML of the div
+         
+         localStorage["title"] = document.getElementById("heading").innerHTML; // heading div
+         localStorage["text"] = document.getElementById("content").innerHTML; // content div
+      }, 1000);
+      
+   </script><script>
+      
+      // functions for saving the contents of the div into a file
+      
+      function saveFile() {
+         
+         var textToSave = document
+            .getElementById("content")
+            .innerHTML
+            .replace(/&nbsp;/g, ' ')
+            .replace(/\<\/div\>/g, '')
+            .replace(/\<div\>/g, '\n')
+            .replace(/<br\s*[\/]?>/gi, '')
+            .replace(/(<([^>]+)>)/ig, '');
+         
+         var textToSaveAsBlob = new Blob([textToSave], {type:"text/plain"});
+         var textToSaveAsURL = window.URL.createObjectURL(textToSaveAsBlob);
+         var fileNameToSaveAs = document.getElementById("heading").textContent;
+         
+         var downloadLink = document.createElement("a");
+         downloadLink.download = fileNameToSaveAs;
+         downloadLink.innerHTML = "Download File";
+         downloadLink.href = textToSaveAsURL;
+         downloadLink.onclick = destroyClickedElement;
+         downloadLink.style.display = "none";
+         document.body.appendChild(downloadLink);
+         
+         downloadLink.click(); }
+      
+      function destroyClickedElement(event) {
+         document.body.removeChild(event.target); }
+      
+      // Function for loading the contents of a file into the div
+      
+      function loadFile() {
+         
+         var fileToLoad = document.getElementById("fileToLoad").files[0];
+         var fileReader = new FileReader();
+         fileReader.onload = function(fileLoadedEvent) {
+            
+            var textFromFileLoaded = fileLoadedEvent.target.result;
+            document.getElementById("content").textContent = textFromFileLoaded; };
+         
+         fileReader.readAsText(fileToLoad, "UTF-8"); }
+
+   </script>
+</body>
+</html>
